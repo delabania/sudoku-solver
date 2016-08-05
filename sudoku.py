@@ -148,7 +148,3 @@ class Sudoku:
                 self.fill_cell(occurrence_row, column, k)
 
 
-s = Sudoku.from_file('./test/resources/grid01.txt')
-print(s.array[7][0])
-k = Sudoku.from_sudoku(s)
-print(k.array[7][0])
