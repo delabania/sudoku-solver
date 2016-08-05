@@ -84,6 +84,16 @@ class SudokuTest(unittest.TestCase):
             filename = path + x + extension
             self.fill_state_array_simple_test(filename)
 
+    def test_update_cell_state(self):
+        sudoku = Sudoku.from_file('./resources/grid01.txt')
+        sudoku.update_cell_state(0, 1, 2)
+        self.assertNotIn(2, sudoku.state_array[0][1])
+        sudoku.update_cell_state(0, 2, 3)
+        self.assertNotIn(3, sudoku.state_array[0][2])
+
+    def test_update_square(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -79,8 +79,15 @@ class Sudoku:
                     counter += 1
         return counter
 
-    def is_valid(self, x, y):
+    def is_vaild(self):
+        for row in range(9):
+            for column in range(9):
+                if self.array[row][column] is not 0:
+                    self.is_cell_valid(row, column)
+
+    def is_cell_valid(self, x, y):
         number = self.state_array[x][y]
+        assert (number is not 0)
         for column in range(9):
             if column is not y:
                 if self.state_array[x][column] is number:
@@ -146,5 +153,18 @@ class Sudoku:
                     occurrence_row = row
             if count_occurrences is 1:
                 self.fill_cell(occurrence_row, column, k)
+
+    def find_cell_to_random_shoot(self):
+        assert (self.empty_fields > 0)
+        lowest_list_size = 10
+        cell = None, None
+
+        for row in range(9):
+            for column in range(9):
+                if 0 < len(self.state_array[row][column]) < lowest_list_size:
+                    assert (self.array[row][column] is not 0)
+                    lowest_list_size = len(self.state_array[row][column])
+                    cell = row, column
+        return cell
 
 
