@@ -96,7 +96,7 @@ class Sudoku:
                     return False
         return True
 
-    #metody rozwiazywania
+    # metody rozwiazywania
     def naked_single(self):
         for row in range(9):
             for column in range(9):
@@ -104,7 +104,48 @@ class Sudoku:
                     self.fill_cell(row, column, self.state_array[row][column][0])
 
     def hidden_single(self):
-        pass
+        for row in range(9):
+            self.hidden_single_row(row)
+        for column in range(9):
+            self.hidden_single_column(column)
+        for i in [0, 3, 6]:
+            for j in [0, 3, 6]:
+                self.hidden_single_square(i, j)
+
+    def hidden_single_square(self, square_row, square_column):
+        for k in range(1, 10):
+            count_occurrences = 0
+            occurrence_row, occurrence_column = -1, -1
+            for row in range(square_row, square_row + 3):
+                for column in range(square_column, square_column + 3):
+                    if k in self.state_array[row][column]:
+                        assert (self.array[row][column] is 0)
+                        count_occurrences += 1
+                        occurrence_row, occurrence_column = row, column
+            if count_occurrences is 1:
+                self.fill_cell(occurrence_row, occurrence_column, k)
+
+    def hidden_single_row(self, row):
+        for k in range(1, 10):
+            count_occurrences, occurrence_column = 0, -1
+            for column in range(9):
+                if k in self.state_array[row][column]:
+                    assert (self.array[row][column] is 0)
+                    count_occurrences += 1
+                    occurrence_column = column
+            if count_occurrences is 1:
+                self.fill_cell(row, occurrence_column, k)
+
+    def hidden_single_column(self, column):
+        for k in range(1, 10):
+            count_occurrences, occurrence_row = 0, -1
+            for row in range(9):
+                if k in self.state_array[row][column]:
+                    assert (self.array[row][column] is 0)
+                    count_occurrences += 1
+                    occurrence_row = row
+            if count_occurrences is 1:
+                self.fill_cell(occurrence_row, column, k)
 
 
 s = Sudoku.from_file('./test/resources/grid01.txt')
