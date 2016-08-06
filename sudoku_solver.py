@@ -25,7 +25,7 @@ class SudokuSolver:
                 # random shoot na row, column
                 new_sudoku = Sudoku.from_sudoku(current_sudoku)
                 number = new_sudoku.state_array[row][column][0]
-                new_sudoku(new_sudoku.fill_cell(row, column, number))
+                new_sudoku.fill_cell(row, column, number)
                 self.stack_random_shoot.append(((row, column), number))
                 self.stack.append(new_sudoku)
             elif state is SudokuState.error_in_random_shoot:
@@ -45,15 +45,33 @@ class SudokuSolver:
     @staticmethod
     def simple_solving(sudoku):
         progress = 1
-        while progress > 0 and sudoku.is_vaild():
+        assert(sudoku.is_valid())
+        while progress > 0 and sudoku.is_valid():
             empty_fields = sudoku.empty_fields
             sudoku.naked_single()
             sudoku.hidden_single()
             progress = empty_fields - sudoku.empty_fields
-        if sudoku.is_vaild():
+        if sudoku.is_valid():
             if sudoku.empty_fields is 0:
                 return SudokuState.the_end
             else:
                 return SudokuState.need_for_random_shoot
         else:
             return SudokuState.error_in_random_shoot
+
+
+def test_fill_state_array():
+    path = './test/resources/grid'
+    extension = '.txt'
+    for i in range(1, 51):
+        if i < 10:
+            x = '0' + str(i)
+        else:
+            x = str(i)
+        filename = path + x + extension
+        solution = SudokuSolver(Sudoku.from_file(filename)).solve()
+        assert(solution.is_valid())
+        solution.print()
+
+if __name__ == "__main__":
+    test_fill_state_array()

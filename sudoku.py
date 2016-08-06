@@ -20,7 +20,8 @@ class Sudoku:
 
     @classmethod
     def from_sudoku(cls, sudoku):
-        return cls(sudoku.array)
+        array = [[int(sudoku.array[row][column]) for column in range(9)] for row in range(9)]
+        return cls(array)
 
     @staticmethod
     def get_square_coordinates(coordinate):
@@ -33,7 +34,7 @@ class Sudoku:
     def fill_state_array(self):
         for row in range(9):
             for column in range(9):
-                if self.array is 0:
+                if self.array[row][column] is 0:
                     self.state_array[row][column] = Sudoku.all_possibilities()
                 else:
                     self.state_array[row][column] = []
@@ -68,6 +69,7 @@ class Sudoku:
     def fill_cell(self, row, column, number):
         assert (number in self.state_array[row][column])
         self.array[row][column] = number
+        self.state_array[row][column] = []
         self.update_sudoku_state_array(row, column, number)
         self.empty_fields -= 1
 
@@ -79,11 +81,17 @@ class Sudoku:
                     counter += 1
         return counter
 
-    def is_vaild(self):
+    def is_valid(self):
         for row in range(9):
             for column in range(9):
                 if self.array[row][column] is not 0:
-                    self.is_cell_valid(row, column)
+                    if not self.is_cell_valid(row, column):
+                        return False
+        for row in range(9):
+            for column in range(9):
+                if self.array[row][column] is 0 and len(self.state_array[row][column]) is 0:
+                    return False
+        return True
 
     def is_cell_valid(self, x, y):
         number = self.state_array[x][y]
@@ -162,9 +170,18 @@ class Sudoku:
         for row in range(9):
             for column in range(9):
                 if 0 < len(self.state_array[row][column]) < lowest_list_size:
-                    assert (self.array[row][column] is not 0)
+                    assert (self.array[row][column] is 0)
                     lowest_list_size = len(self.state_array[row][column])
                     cell = row, column
         return cell
+
+    def print(self):
+        for row in range(9):
+            for column in range(9):
+                if column % 3 is 0:
+                    print("|", end="")
+                print(self.array[row][column], end=" ")
+            print("|")
+        print()
 
 
