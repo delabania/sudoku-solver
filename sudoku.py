@@ -175,7 +175,7 @@ class Sudoku:
                     cell = row, column
         return cell
 
-    def print(self):
+    def print_sudoku(self):
         for row in range(9):
             for column in range(9):
                 if column % 3 is 0:
